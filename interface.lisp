@@ -107,9 +107,11 @@ constraint."
       "us-east-1"))
 
 (defun region-endpoint (region)
-  (if (string= region "us-east-1")
-      (or *s3-endpoint* "s3.amazonaws.com")
-      (format nil "s3-~A.amazonaws.com" region)))
+  (if *use-digitalocean*
+      (format nil "~A.digitaloceanspaces.com" region)
+      (if (string= region "us-east-1")
+          (or *s3-endpoint* "s3.amazonaws.com")
+          (format nil "s3-~A.amazonaws.com" region))))
 
 (defun query-bucket (bucket &key prefix marker max-keys delimiter
                               ((:credentials *credentials*) *credentials*)
