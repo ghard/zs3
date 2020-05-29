@@ -116,6 +116,7 @@
            #:*s3-endpoint*
            #:*s3-region*
            #:*use-content-md5*
+           #:*use-digitalocean*
            #:*signed-payload*
            #:make-post-policy
            #:head

@@ -37,6 +37,8 @@
   "When true, compute the SHA256 hash for the body of all requests
   when submitting to AWS.")
 
+(defvar *use-digitalocean* nil)
+
 (defvar *use-keep-alive* nil
   "When set to t, this library uses the drakma client with
    keep alive enabled. This means that a stream will be reused for multiple
@@ -218,8 +220,12 @@
 
 (defgeneric host (request)
   (:method ((request request))
-    (or (redirected-endpoint (endpoint request) (bucket request))
-        (endpoint request))))
+    (if *use-digitalocean*
+        (format nil "~A.~A"
+                (bucket request)
+                (endpoint request))
+        (or (redirected-endpoint (endpoint request) (bucket request))
+            (endpoint request)))))
 
 (defgeneric http-method (request)
   (:method (request)
@@ -407,7 +413,11 @@ service. A signing key could be saved, shared, and reused, but ZS3 just recomput
   (:method (request)
     (format nil "http~@[s~*~]://~A~A"
             (ssl request)
-            (endpoint request)
+            (if *use-digitalocean*
+                (format nil "~A.~A"
+                        (bucket request)
+                        (endpoint request))
+                (endpoint request))
             (request-path request))))
 
 (defun send-file-content (fun request)
