@@ -133,7 +133,7 @@ constraint."
 (defun all-keys (bucket &key prefix
                           ((:credentials *credentials*) *credentials*)
                           ((:backoff *backoff*) *backoff*))
-  "Reutrn a vector of all KEY objects in BUCKET."
+  "Return a vector of all KEY objects in BUCKET."
   (let ((response (query-bucket bucket :prefix prefix))
         (results '()))
     (loop
